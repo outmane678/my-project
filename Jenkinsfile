@@ -13,6 +13,12 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/outmane678/my-project.git'
             }
         }
+
+        stage('Test Trigger'){
+        steps {
+            echo 'Pipeline déclenché avec modification test'
+        }
+    }
         
         stage('Restore'){
             steps {

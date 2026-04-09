@@ -13,10 +13,10 @@ pipeline {
             }
         }
         stage('Test Trigger'){
-            steps {
-                echo 'Pipeline déclenché avec modification test'
-            }
+        steps {
+            echo 'Pipeline déclenché avec modification test'
         }
+    }
         stage('Restore'){
             steps {
                 bat '"%DOTNET%" restore'

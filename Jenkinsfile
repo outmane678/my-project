@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOTNET = "C:\\Program Files\\dotnet\\dotnet.exe"
+        DOTNET_CLI_TELEMETRY_OPTOUT = '1'
         DEPLOY_DIR = "C:\\inetpub\\wwwroot\\MonApp"
         TEMP_DIR = "C:\\Temp\\MonApp"
     }
@@ -10,19 +10,19 @@ pipeline {
     stages {
         stage('Restore') {
             steps {
-                bat '"%DOTNET%" restore "Projet.sln"'
+                bat 'dotnet restore "Projet.sln"'
             }
         }
 
         stage('Build') {
             steps {
-                bat '"%DOTNET%" build "Projet.sln" --configuration Release --no-restore'
+                bat 'dotnet build "Projet.sln" --configuration Release --no-restore'
             }
         }
 
         stage('Test') {
             steps {
-                bat '"%DOTNET%" test "Projet.sln" --configuration Release --no-build --logger "console;verbosity=normal" --results-directory "TestResults" --logger "trx;LogFileName=test-results.trx"'
+                bat 'dotnet test "Projet.sln" --configuration Release --no-build --logger "console;verbosity=normal" --results-directory "TestResults" --logger "trx;LogFileName=test-results.trx"'
             }
             post {
                 always {
@@ -40,9 +40,9 @@ pipeline {
         stage('Publish & Deploy') {
             steps {
                 bat 'if not exist "%TEMP_DIR%" mkdir "%TEMP_DIR%"'
-                bat '"%DOTNET%" publish "my-project-main\\dotnet_app\\dotnet_app.csproj" -c Release -o "%TEMP_DIR%\\dotnet_app"'
-                bat '"%DOTNET%" publish "my-project-main\\user_account_service\\user-account-service.csproj" -c Release -o "%TEMP_DIR%\\user_account_service"'
-                bat '"%DOTNET%" publish "my-project-main\\WebApplication1\\WebApplication1.csproj" -c Release -o "%TEMP_DIR%\\WebApplication1"'
+                bat 'dotnet publish "my-project-main\\dotnet_app\\dotnet_app.csproj" -c Release -o "%TEMP_DIR%\\dotnet_app"'
+                bat 'dotnet publish "my-project-main\\user_account_service\\user-account-service.csproj" -c Release -o "%TEMP_DIR%\\user_account_service"'
+                bat 'dotnet publish "my-project-main\\WebApplication1\\WebApplication1.csproj" -c Release -o "%TEMP_DIR%\\WebApplication1"'
                 bat '''
                     if not exist "%DEPLOY_DIR%" mkdir "%DEPLOY_DIR%"
                     xcopy /E /Y /I "%TEMP_DIR%\\*" "%DEPLOY_DIR%\\"

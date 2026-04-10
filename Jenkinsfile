@@ -22,7 +22,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat '"%DOTNET%" test "my-project-main.Tests\\my-project-main.Tests.csproj" --configuration Release --no-build'
+                bat '"%DOTNET%" test "Projet.sln" --configuration Release --no-build --logger "console;verbosity=normal" --results-directory "TestResults" --logger "trx;LogFileName=test-results.trx"'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'TestResults/**', allowEmptyArchive: true
+                }
             }
         }
 

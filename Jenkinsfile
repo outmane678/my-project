@@ -41,7 +41,7 @@ pipeline {
             steps {
                 bat 'if not exist "%TEMP_DIR%" mkdir "%TEMP_DIR%"'
                 bat 'dotnet publish "my-project-main\\dotnet_app\\dotnet_app.csproj" -c Release -o "%TEMP_DIR%\\dotnet_app"'
-                bat 'dotnet publish "my-project-main\\user_account_service\\user-account-service.csproj" -c Release -o "%TEMP_DIR%\\user-account-service"'
+                bat 'dotnet publish "my-project-main\\user-account-service\\user-account-service.csproj" -c Release -o "%TEMP_DIR%\\user-account-service"'
                 bat 'dotnet publish "my-project-main\\WebApplication1\\WebApplication1.csproj" -c Release -o "%TEMP_DIR%\\WebApplication1"'
                 bat '''
                     if exist "%DEPLOY_DIR%" rd /s /q "%DEPLOY_DIR%"

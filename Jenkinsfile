@@ -78,6 +78,32 @@ pipeline {
             }
         }
 
+        // Evite HTTP 500.35 : une appli ASP.NET Core in-process par pool. Pools séparés = fiable même si web.config ancien.
+        stage('IIS app pools (500.35)') {
+            steps {
+                powershell '''
+                    $ErrorActionPreference = "Stop"
+                    $appcmd = Join-Path $env:SystemRoot "system32\\inetsrv\\appcmd.exe"
+                    if (-not (Test-Path $appcmd)) { throw "appcmd introuvable (IIS non installe ?)" }
+
+                    function Ensure-Pool([string] $name) {
+                        & $appcmd list apppool /name.name:$name 2>$null | Out-Null
+                        if ($LASTEXITCODE -ne 0) {
+                            & $appcmd add apppool /name:$name /managedRuntimeVersion:""
+                        }
+                    }
+
+                    Ensure-Pool "MonApp_AC_WebApplication1"
+                    Ensure-Pool "MonApp_AC_dotnet_app"
+                    Ensure-Pool "MonApp_AC_user_account"
+
+                    & $appcmd set app "MonApp/WebApplication1" /applicationPool:MonApp_AC_WebApplication1
+                    & $appcmd set app "MonApp/dotnet_app" /applicationPool:MonApp_AC_dotnet_app
+                    & $appcmd set app "MonApp/user-account-service" /applicationPool:MonApp_AC_user_account
+                '''
+            }
+        }
+
         stage('Restart IIS') {
             steps {
                 bat 'iisreset /start'

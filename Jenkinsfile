@@ -9,6 +9,12 @@
 pipeline {
     agent any
 
+    // Si le webhook GitHub → Jenkins n’est pas configuré, Jenkins vérifie le dépôt toutes les ~3 min.
+    // Déclenchement immédiat au push : GitHub → Settings → Webhooks → URL .../github-webhook/ + cocher le trigger dans le job Jenkins.
+    triggers {
+        pollSCM('H/3 * * * *')
+    }
+
     environment {
         DOTNET_CLI_TELEMETRY_OPTOUT = '1'
         DEPLOY_DIR = "C:\\inetpub\\wwwroot\\MonApp"

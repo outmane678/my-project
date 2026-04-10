@@ -6,7 +6,7 @@ namespace my_project_main.Tests.WebApplication1.Tests.Data.Tests;
 
 public class AppDbContextTests
 {
-    [Fact]
+    [Fact(DisplayName = "[Département — Données] EF Core en mémoire : enregistrer un département")]
     public void SaveChanges_PersistsDepartmentInMemory()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()

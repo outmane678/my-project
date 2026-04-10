@@ -6,7 +6,7 @@ namespace my_project_main.Tests.dotnet_app.Tests.Data.Tests;
 
 public class AppDbContextTests
 {
-    [Fact]
+    [Fact(DisplayName = "[Employé — Données] EF Core en mémoire : enregistrer un employé")]
     public void SaveChanges_PersistsEmployeeInMemory()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()

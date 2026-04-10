@@ -7,7 +7,7 @@ namespace my_project_main.Tests.user_account_service.Tests.Services.Tests;
 
 public class UserServiceTests
 {
-    [Fact]
+    [Fact(DisplayName = "[Compte — Service] Charger un utilisateur par nom (existe)")]
     public async Task LoadUserByUsername_ReturnsUser_WhenExists()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -30,7 +30,7 @@ public class UserServiceTests
         Assert.Equal("findme", user!.Username);
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Compte — Service] Charger un utilisateur par nom (inexistant → null)")]
     public async Task LoadUserByUsername_ReturnsNull_WhenMissing()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()

@@ -54,7 +54,7 @@ public class DepartmentServiceImp : DepartmentService
     }
 
     // trouver un département par son id
-    public Department FindDepartmentById(Guid id)
+    public Department? FindDepartmentById(Guid id)
     {
         return _context.Departments.Find(id);
     }

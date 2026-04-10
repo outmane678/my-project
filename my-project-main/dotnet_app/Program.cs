@@ -36,7 +36,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 
 builder.Services.AddScoped<EmployeeServiceImp>();
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailSender, EmailService>();
 
 // Refit Client - CORRIGÉ
 builder.Services.AddRefitClient<IDepartmentAPI>()

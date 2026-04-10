@@ -7,6 +7,7 @@ using dotnet_app.Client;
 using dotnet_app.DTOs.Requests;
 using Microsoft.EntityFrameworkCore;
 using dotnet_app.Models.Entities;
+using dotnet_app.Services;
 namespace dotnet_app.Services.Implementations;
 
 
@@ -14,8 +15,8 @@ public class EmployeeServiceImp : IEmployeeService
 {
     private readonly AppDbContext _context;
     private readonly IDepartmentAPI _departmentApi;
-    private readonly EmailService _emailService;
-    public EmployeeServiceImp(AppDbContext context, IDepartmentAPI departmentApi, EmailService emailService)
+    private readonly IEmailSender _emailService;
+    public EmployeeServiceImp(AppDbContext context, IDepartmentAPI departmentApi, IEmailSender emailService)
     {
         _context = context;
         _departmentApi = departmentApi;
@@ -62,22 +63,7 @@ public class EmployeeServiceImp : IEmployeeService
         };
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
-        // AJOUTÉ: Envoyer un email de bienvenue au nouvel employé
-        try
-        {
-            Console.WriteLine($" Tentative d'envoi d'email à {employee.Email}...");
-            
-            _emailService.SendAccountCreationEmail(employee.Email, token);
-            
-            Console.WriteLine($" Email de bienvenue envoyé à {employee.Email}");
-        }
-        catch (Exception ex)
-        {
-            //  ICI VOUS VERREZ L'ERREUR RÉELLE!
-            Console.WriteLine($" ERREUR ENVOI EMAIL: {ex.Message}");
-            Console.WriteLine($" Détail: {ex.StackTrace}");
-            // Ne pas bloquer la création
-        }
+        _emailService.SendAccountCreationEmail(employee.Email, token);
 
         return employee;
     }

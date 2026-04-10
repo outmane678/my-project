@@ -3,15 +3,20 @@ using dotnet_app.DTOs.Requests;
 using dotnet_app.Services;
 using dotnet_app.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace my_project_main.Tests.dotnet_app.Tests.Support;
+
+internal sealed class NoOpEmailSender : IEmailSender
+{
+    public void SendAccountCreationEmail(string to, string token)
+    {
+    }
+}
 
 internal static class EmployeeServiceTestFixture
 {
     /// <summary>
-    /// Crée le service employé avec EF InMemory, un stub d'API département et une config email minimale
-    /// (l'échec SMTP éventuel est absorbé par <see cref="EmployeeServiceImp.CreateEmployee"/>).
+    /// Crée le service employé avec EF InMemory, un stub d'API département et un envoi d'e-mail factice (pas de SMTP).
     /// </summary>
     public static (AppDbContext Context, EmployeeServiceImp Service) CreateEmployeeService(
         DepartmentDto department,
@@ -23,16 +28,8 @@ internal static class EmployeeServiceTestFixture
             .Options;
         var context = new AppDbContext(options);
         var api = new StubDepartmentApi(department);
-        IConfiguration config = new TestConfiguration(new Dictionary<string, string?>
-        {
-            ["EmailSettings:BackendOrigin"] = "http://localhost",
-            ["EmailSettings:Username"] = "test@example.com",
-            ["EmailSettings:Password"] = "pwd",
-            ["EmailSettings:Host"] = "127.0.0.1",
-            ["EmailSettings:Port"] = "1"
-        });
-        var emailService = new EmailService(config);
-        var service = new EmployeeServiceImp(context, api, emailService);
+        IEmailSender email = new NoOpEmailSender();
+        var service = new EmployeeServiceImp(context, api, email);
         return (context, service);
     }
 }

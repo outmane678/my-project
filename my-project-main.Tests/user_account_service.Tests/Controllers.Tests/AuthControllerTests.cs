@@ -19,7 +19,7 @@ public class AuthControllerTests
         IsVerified = false
     };
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — API] Inscription (201 Created)")]
     public async Task Signup_Returns201_WhenSucceeds()
     {
         var (_, auth, _, _) = AuthServiceTestFixture.CreateAuthService(SampleEmployee());
@@ -31,7 +31,7 @@ public class AuthControllerTests
         Assert.Equal(StatusCodes.Status201Created, status.StatusCode);
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — API] Connexion avec identifiants valides (200 + JWT)")]
     public async Task Login_ReturnsOkWithToken_WhenCredentialsValid()
     {
         var emp = SampleEmployee();
@@ -45,7 +45,7 @@ public class AuthControllerTests
         Assert.NotNull(ok.Value);
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — API] Récupérer l’id employé depuis le Bearer token (200 OK)")]
     public async Task GetMyEmployeeId_ReturnsOk_WhenBearerTokenValid()
     {
         var emp = SampleEmployee();

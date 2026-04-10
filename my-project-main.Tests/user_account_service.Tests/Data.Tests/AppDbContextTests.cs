@@ -6,7 +6,7 @@ namespace my_project_main.Tests.user_account_service.Tests.Data.Tests;
 
 public class AppDbContextTests
 {
-    [Fact]
+    [Fact(DisplayName = "[Compte — Données] EF Core en mémoire : enregistrer un utilisateur")]
     public void SaveChanges_PersistsUserAccountInMemory()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()

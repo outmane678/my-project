@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace dotnet_app.Services;
 
-public class EmailService
+public class EmailService : IEmailSender
 {
     // PLUS DE CHAMP _smtpClient - On crée une nouvelle connexion à chaque envoi
     private readonly string ORIGIN;
@@ -32,22 +32,13 @@ public class EmailService
 
     public void SendAccountCreationEmail(string to, string token)
     {
-        //  CRÉER UNE NOUVELLE CONNEXION À CHAQUE ENVOI
         using var client = new SmtpClient();
-        
         try
         {
-            Console.WriteLine($" Connexion à {_host}:{_port}...");
             client.Connect(_host, _port, MailKit.Security.SecureSocketOptions.StartTls);
-            Console.WriteLine($" Connecté!");
-            
-            Console.WriteLine($" Authentification avec {from}...");
             client.Authenticate(from, _password);
-            Console.WriteLine($" Authentifié!");
-            
+
             string link = $"{ORIGIN}/auth/signup?token={token}";
-            Console.WriteLine($" Lien: {link}");
-            
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Employee Service", from));
             message.To.Add(new MailboxAddress("", to));
@@ -57,16 +48,12 @@ public class EmailService
                 Text = $"Please click the following link to activate your account: {link}"
             };
 
-            Console.WriteLine($" Envoi du message...");
             client.Send(message);
-            Console.WriteLine($" Email envoyé à {to}!");
-            
             client.Disconnect(true);
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($" ERREUR SMTP: {ex.Message}");
-            throw; // Pour voir l'erreur dans EmployeeServiceImp
+            // Échec SMTP : ne pas remonter (la création employé est déjà persistée côté appelant).
         }
     }
 }

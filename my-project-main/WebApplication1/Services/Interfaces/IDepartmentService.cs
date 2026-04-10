@@ -7,7 +7,7 @@ namespace WebApplication1.Services.Interfaces
         Department CreateDepartment(DepartmentCreate department);
         Department UpadateDepartment(Guid id, DepartmentUpdate department);
         void DeleteDepartment(Guid id);
-        Department FindDepartmentById(Guid id);
+        Department? FindDepartmentById(Guid id);
         List<Department> GetAllDepartments();
     }
 }

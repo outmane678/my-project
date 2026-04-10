@@ -18,7 +18,7 @@ public class AuthServiceTests
         IsVerified = false
     };
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Connexion retourne un JWT")]
     public async Task Login_ReturnsJwt_WhenCredentialsValid()
     {
         var (_, auth, _, _) = AuthServiceTestFixture.CreateAuthService(SampleEmployee());
@@ -29,7 +29,7 @@ public class AuthServiceTests
         Assert.False(string.IsNullOrWhiteSpace(jwt));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Connexion — utilisateur inconnu → exception")]
     public async Task Login_Throws_WhenUserMissing()
     {
         var (_, auth, _, _) = AuthServiceTestFixture.CreateAuthService(SampleEmployee());
@@ -38,7 +38,7 @@ public class AuthServiceTests
             auth.Login(new LoginRequestDto("nobody", "x")));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Connexion — mot de passe incorrect → exception")]
     public async Task Login_Throws_WhenPasswordInvalid()
     {
         var (_, auth, _, _) = AuthServiceTestFixture.CreateAuthService(SampleEmployee());
@@ -48,7 +48,7 @@ public class AuthServiceTests
             auth.Login(new LoginRequestDto("bob", "WrongPass!")));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Inscription avec jeton employé valide crée le compte")]
     public async Task Signup_CreatesUser_WhenTokenValid()
     {
         var emp = SampleEmployee();
@@ -59,7 +59,7 @@ public class AuthServiceTests
         Assert.True(await ctx.UserAccounts.AnyAsync(u => u.Username == "carol" && u.EmployeeId == emp.Id));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Inscription — nom d’utilisateur déjà pris → exception")]
     public async Task Signup_Throws_WhenUsernameAlreadyUsed()
     {
         var emp = SampleEmployee();
@@ -77,7 +77,7 @@ public class AuthServiceTests
             auth.Signup(new SignupRequestDto("taken", "Other1!"), "tok"));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Inscription — l’employé a déjà un compte → exception")]
     public async Task Signup_Throws_WhenEmployeeAlreadyHasAccount()
     {
         var emp = SampleEmployee();
@@ -88,7 +88,7 @@ public class AuthServiceTests
             auth.Signup(new SignupRequestDto("u2", "Abcdef1!"), "t2"));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Inscription — jeton employé invalide → exception")]
     public async Task Signup_Throws_WhenEmployeeTokenInvalid()
     {
         var (_, auth, _, _) = AuthServiceTestFixture.CreateAuthService(null);
@@ -97,7 +97,7 @@ public class AuthServiceTests
             auth.Signup(new SignupRequestDto("ghost", "Abcdef1!"), "bad"));
     }
 
-    [Fact]
+    [Fact(DisplayName = "[Auth — Service] Extraire l’id employé d’un Bearer JWT valide")]
     public async Task GetEmployeeIdFromToken_ReturnsEmployeeId_WhenBearerValid()
     {
         var emp = SampleEmployee();

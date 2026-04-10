@@ -1,5 +1,4 @@
-my-project-main/.git
-my-project-main/bin/
-my-project-main/obj/
+my-project-main/**/bin/
+my-project-main/**/obj/
 my-project-main.Tests/bin/
 my-project-main.Tests/obj/

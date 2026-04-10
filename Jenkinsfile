@@ -46,6 +46,7 @@ pipeline {
                 bat '''
                     if not exist "%DEPLOY_DIR%" mkdir "%DEPLOY_DIR%"
                     xcopy /E /Y /I "%TEMP_DIR%\\*" "%DEPLOY_DIR%\\"
+                    if exist "%DEPLOY_DIR%\\web.config" del /F /Q "%DEPLOY_DIR%\\web.config"
                 '''
             }
         }

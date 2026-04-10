@@ -87,6 +87,9 @@ app.UseAuthorization();
 // =======================
 // Mapping des Controllers
 // =======================
+app.MapGet("/health", () => Results.Text("user-account-service OK", "text/plain"))
+    .ExcludeFromDescription();
+
 app.MapControllers(); // ✅ Active les controllers (AuthController, etc.)
 
 app.Run();

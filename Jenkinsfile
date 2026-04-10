@@ -44,7 +44,8 @@ pipeline {
                 bat 'dotnet publish "my-project-main\\user_account_service\\user-account-service.csproj" -c Release -o "%TEMP_DIR%\\user_account_service"'
                 bat 'dotnet publish "my-project-main\\WebApplication1\\WebApplication1.csproj" -c Release -o "%TEMP_DIR%\\WebApplication1"'
                 bat '''
-                    if not exist "%DEPLOY_DIR%" mkdir "%DEPLOY_DIR%"
+                    if exist "%DEPLOY_DIR%" rd /s /q "%DEPLOY_DIR%"
+                    mkdir "%DEPLOY_DIR%"
                     xcopy /E /Y /I "%TEMP_DIR%\\*" "%DEPLOY_DIR%\\"
                     if exist "%DEPLOY_DIR%\\web.config" del /F /Q "%DEPLOY_DIR%\\web.config"
                 '''

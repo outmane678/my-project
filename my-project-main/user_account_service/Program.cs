@@ -57,17 +57,28 @@ builder.Services
 
 var app = builder.Build();
 
+var pathBase = app.Configuration["PathBase"];
+if (!string.IsNullOrWhiteSpace(pathBase))
+{
+    app.UsePathBase(pathBase);
+}
+
 // =======================
 // Middleware
 // =======================
 
-if (app.Environment.IsDevelopment())
+var enableSwagger = app.Environment.IsDevelopment()
+    || app.Configuration.GetValue("EnableSwagger", false);
+if (enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (!app.Configuration.GetValue("DisableHttpsRedirection", false))
+{
+    app.UseHttpsRedirection();
+}
 
 // JWT Middlewares (ordre IMPORTANT)
 app.UseAuthentication();
